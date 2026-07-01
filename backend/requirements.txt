@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+langgraph
+langgraph-checkpoint-sqlite
+langchain-community
+langchain-openai
+langchain-text-splitters
+langchain-huggingface
+faiss-cpu
+python-dotenv
+aiosqlite
+pydantic
