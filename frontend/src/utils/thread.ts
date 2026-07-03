@@ -1,11 +1,10 @@
-// src/utils/thread.ts
-const THREAD_ID_KEY = "chat_thread_id";
+import { STORAGE_KEYS } from "../constants";
 
 export function getOrCreateThreadId(): string {
-  let threadId = localStorage.getItem(THREAD_ID_KEY);
+  let threadId = localStorage.getItem(STORAGE_KEYS.THREAD_ID);
   if (!threadId) {
     threadId = crypto.randomUUID();
-    localStorage.setItem(THREAD_ID_KEY, threadId);
+    localStorage.setItem(STORAGE_KEYS.THREAD_ID, threadId);
   }
   return threadId;
 }

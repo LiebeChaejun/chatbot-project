@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { getOrCreateThreadId } from "../utils/thread";
 import { toUserFriendlyMessage } from "../utils/errorMessage";
+import { API_CONFIG } from "../constants";
 import type { Message, ChatApiResponse } from "../types/chat";
 
-const API_URL = `${import.meta.env.VITE_API_URL}/chat`;
-const REQUEST_TIMEOUT_MS = 30000;
+const API_URL = `${import.meta.env.VITE_API_URL}${API_CONFIG.CHAT_ENDPOINT}`;
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -25,7 +25,10 @@ export function useChat() {
     setError(null);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    const timeoutId = setTimeout(
+      () => controller.abort(),
+      API_CONFIG.TIMEOUT_MS
+    );
 
     try {
       const threadId = getOrCreateThreadId();
