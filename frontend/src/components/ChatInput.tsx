@@ -1,5 +1,5 @@
-// src/components/ChatInput.tsx
 import { useState, useRef, useEffect } from "react";
+import { Button } from "./Button";
 
 interface Props {
   onSend: (message: string) => void;
@@ -33,13 +33,9 @@ export function ChatInput({ onSend, disabled }: Props) {
         onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         disabled={disabled}
       />
-      <button
-        onClick={handleSubmit}
-        disabled={disabled}
-        className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm disabled:opacity-50"
-      >
+      <Button onClick={handleSubmit} disabled={disabled}>
         전송
-      </button>
+      </Button>
     </div>
   );
 }
