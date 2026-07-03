@@ -4,7 +4,3 @@ export interface Message {
   role: "user" | "assistant";
   content: string;
 }
-
-export type ChatApiResponse =
-  | { response: string; error?: never }
-  | { error: string; response?: never };

@@ -3,7 +3,8 @@ import { useState } from "react";
 import { getOrCreateThreadId } from "../utils/thread";
 import { toUserFriendlyMessage } from "../utils/errorMessage";
 import { API_CONFIG } from "../constants";
-import type { Message, ChatApiResponse } from "../types/chat";
+import type { Message } from "../types/chat";
+import type { ChatApiResponse } from "../types/api";
 
 const API_URL = `${import.meta.env.VITE_API_URL}${API_CONFIG.CHAT_ENDPOINT}`;
 

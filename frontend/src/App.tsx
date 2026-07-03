@@ -1,9 +1,5 @@
-// src/App.tsx
 import { useChat } from "./hooks/useChat";
-import { ChatHeader } from "./components/ChatHeader";
-import { ChatWindow } from "./components/ChatWindow";
-import { ChatInput } from "./components/ChatInput";
-import { ErrorBanner } from "./components/ErrorBanner";
+import { ChatHeader, ChatWindow, ChatInput, ErrorBanner } from "./components";
 
 function App() {
   const { messages, sendMessage, loading, error } = useChat();
