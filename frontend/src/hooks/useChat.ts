@@ -3,7 +3,7 @@ import { useState } from "react";
 import { getOrCreateThreadId } from "../utils/thread";
 import type { Message, ChatApiResponse } from "../types/chat";
 
-const API_URL = "http://localhost:8000/chat";
+const API_URL = `${import.meta.env.VITE_API_URL}/chat`;
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
