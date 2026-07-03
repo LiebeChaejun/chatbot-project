@@ -32,14 +32,16 @@ export function useChat() {
 
       const data: ChatApiResponse = await res.json();
 
-      if (!res.ok || data.error) {
-        throw new Error(data.error || `서버 오류: ${res.status}`);
+      if (!res.ok || "error" in data) {
+        const message =
+          "error" in data ? data.error : `서버오류: ${res.status}`;
+        throw new Error(message);
       }
 
       const assistantMessage: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: data.response ?? "",
+        content: data.response,
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {

@@ -5,7 +5,6 @@ export interface Message {
   content: string;
 }
 
-export interface ChatApiResponse {
-  response?: string;
-  error?: string;
-}
+export type ChatApiResponse =
+  | { response: string; error?: never }
+  | { error: string; response?: never };
