@@ -26,10 +26,7 @@ export function useChat() {
     setError(null);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(
-      () => controller.abort(),
-      API_CONFIG.TIMEOUT_MS
-    );
+    const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT_MS);
 
     try {
       const threadId = getOrCreateThreadId();
@@ -43,8 +40,7 @@ export function useChat() {
       const data: ChatApiResponse = await res.json();
 
       if (!res.ok || "error" in data) {
-        const message =
-          "error" in data ? data.error : `서버오류: ${res.status}`;
+        const message = "error" in data ? data.error : `서버오류: ${res.status}`;
         throw new Error(message);
       }
 

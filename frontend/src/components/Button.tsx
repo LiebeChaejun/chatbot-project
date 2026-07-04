@@ -11,11 +11,7 @@ const VARIANT_STYLES: Record<Variant, string> = {
   secondary: "bg-gray-100 text-gray-700 hover:bg-gray-200",
 };
 
-export function Button({
-  variant = "primary",
-  className = "",
-  ...rest
-}: Props) {
+export function Button({ variant = "primary", className = "", ...rest }: Props) {
   return (
     <button
       className={`px-4 py-2 rounded-full text-sm disabled:opacity-50 transition-colors ${VARIANT_STYLES[variant]} ${className}`}
