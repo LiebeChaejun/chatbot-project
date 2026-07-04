@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from db.conversations import (
   create_conversation,
   list_conversations,
+  update_conversation_title
 )
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
@@ -28,6 +30,19 @@ async def get_conversations():
   conversations = await list_conversations(app_state["conversations_db_path"])
   return {"conversations": conversations}
 
+class UpdateTitleRequest(BaseModel):
+    title: str
+
+@router.patch("/{thread_id}")
+async def rename_conversation(thread_id: str, req: UpdateTitleRequest):
+    if not req.title.strip():
+        raise HTTPException(status_code=400, detail="제목은 비어있을 수 없습니다.")
+
+    app_state = get_app_state()
+    await update_conversation_title(
+        app_state["conversations_db_path"], thread_id, req.title.strip()
+    )
+    return {"thread_id": thread_id, "title": req.title.strip()}
 
 @router.get("/{thread_id}/messages")
 async def get_conversation_messages(thread_id: str):

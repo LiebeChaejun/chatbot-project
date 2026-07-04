@@ -10,7 +10,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"), override=True)
 from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from graph.agent import workflow
-from db.conversations import init_conversations_db, touch_conversation, create_conversation
+from db.conversations import init_conversations_db, touch_conversation, create_conversation, update_conversation_title
 from routers.conversations import router as conversations_router
 
 CHECKPOINT_DB_PATH = os.path.join(BASE_DIR, "history_single_agent.sqlite")
@@ -54,16 +54,30 @@ async def health():
     return {"status": "ok"}
 
 
+TITLE_MAX_LENGTH = 20
+
 @app.post("/chat")
 async def chat(req: ChatRequest):
     try:
         agent = app_state["agent"]
         config = {"configurable": {"thread_id": req.thread_id}}
+
+        existing_state = await agent.aget_state(config)
+        is_first_message = not existing_state.values.get("messages")
+
         initial_state = {"messages": [HumanMessage(content=req.message)]}
         final_state = await agent.ainvoke(initial_state, config=config)
 
-        # 대화 목록의 updated_at 갱신 (최근 대화가 위로 올라오도록)
-        await touch_conversation(app_state["conversations_db_path"], req.thread_id)
+        if is_first_message:
+            title = req.message[:TITLE_MAX_LENGTH]
+            if len(req.message) > TITLE_MAX_LENGTH:
+                title += "..."
+            # 대화 목록의 updated_at 갱신 (최근 대화가 위로 올라오도록)
+            await update_conversation_title(
+                app_state["conversations_db_path"], req.thread_id, title
+            )
+        else:
+            await touch_conversation(app_state["conversations_db_path"], req.thread_id)
 
         return {"response": final_state["messages"][-1].content}
     except Exception as e:
