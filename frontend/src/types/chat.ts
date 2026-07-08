@@ -4,8 +4,3 @@ export interface Message {
   role: "user" | "assistant";
   content: string;
 }
-
-export interface Res {
-  threadId: string;
-  message: Message[];
-}
