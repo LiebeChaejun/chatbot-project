@@ -32,7 +32,7 @@ embeddings = HuggingFaceEmbeddings(
   encode_kwargs={'normalize_embeddings': True}
 )
 vectorstore = FAISS.from_documents(docs, embeddings)
-retriever = vectorstore.as_retriever(search_kwargs={'k': 1})
+retriever = vectorstore.as_retriever(search_kwargs={'k': 3})
 
 ## LCEL RAG 체인 구성
 system_prompt = """당신은 친절한 온라인 교육 플랫폼 직원입니다. 주어진 컨텍스트 정보를 바탕으로 고객의 질문에 정중하게 답변해주세요. 주어진 컨텍스트 정보는 고객의 질문에 대한 답변입니다. 컨텍스트를 그대로 사용하여
@@ -60,7 +60,7 @@ async def rag_node(state: AgentState):
   chat_history = state.messages[:-1]
 
   retrieved_docs = await retriever.ainvoke(question)
-  context_text = retrieved_docs[0].page_content
+  context_text = "\n\n---\n\n".join(doc.page_content for doc in retrieved_docs)
 
   response = await rag_chain.ainvoke({
     "context": context_text,
