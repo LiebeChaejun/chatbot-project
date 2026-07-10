@@ -26,6 +26,7 @@ function App() {
 
   const handleSend = async (content: string) => {
     let threadId = selectedThreadId;
+    const isNewConversation = !threadId;
 
     if (!threadId) {
       const conversation = await createConversation();
@@ -36,8 +37,11 @@ function App() {
     await sendMessage(content, threadId);
     touchConversation(threadId);
 
-    // 첫 메시지였다면 백엔드가 제목을 자동 생성했을 테니, 목록을 다시 불러와 반영
-    await refreshConversations();
+    if (isNewConversation) {
+      await refreshConversations();
+    } else {
+      touchConversation(threadId);
+    }
   };
 
   const handleCreateNew = () => {
