@@ -1,5 +1,3 @@
-import type { Message } from "./chat";
-
 export interface Conversation {
   threadId: string;
   title: string;
