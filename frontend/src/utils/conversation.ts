@@ -25,7 +25,7 @@ export function toConversations(rawList: RawConversation[]): Conversation[] {
 }
 
 export function toMessages(response: ConversationMessagesResponse): Message[] {
-  return response.message.map((raw) => ({
+  return response.messages.map((raw) => ({
     id: crypto.randomUUID(),
     role: raw.role,
     content: raw.content,

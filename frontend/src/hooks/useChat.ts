@@ -19,7 +19,7 @@ export function useChat(threadId: string | null) {
     const loadPastMessages = async () => {
       try {
         const res = await fetch(
-          `${API_CONFIG.BASE_URL}/conversations/${threadId}/ messages`
+          `${API_CONFIG.BASE_URL}/conversations/${threadId}/messages`
         );
         if (!res.ok) {
           setMessages([]);
@@ -27,7 +27,8 @@ export function useChat(threadId: string | null) {
         }
         const data: ConversationMessagesResponse = await res.json();
         setMessages(toMessages(data));
-      } catch {
+      } catch (err) {
+        console.error("과거 메시지 조회 중 예외:", err);
         setMessages([]);
       }
     };
@@ -35,8 +36,8 @@ export function useChat(threadId: string | null) {
     loadPastMessages();
   }, [threadId]);
 
-  const sendMessage = async (content: string) => {
-    if (!content.trim() || !threadId) return;
+  const sendMessage = async (content: string, targetThreadId: string) => {
+    if (!content.trim() || !targetThreadId) return;
 
     const userMessage: Message = {
       id: crypto.randomUUID(),
@@ -57,7 +58,7 @@ export function useChat(threadId: string | null) {
       const res = await fetch(`${API_CONFIG.BASE_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: content, thread_id: threadId }),
+        body: JSON.stringify({ message: content, thread_id: targetThreadId }), // ⬅️ 여기도 변경
         signal: controller.signal,
       });
 
@@ -65,7 +66,7 @@ export function useChat(threadId: string | null) {
 
       if (!res.ok || "error" in data) {
         const message =
-          "error" in data ? data.error : `서버오류: ${res.status}`;
+          "error" in data ? data.error : `서버 오류: ${res.status}`;
         throw new Error(message);
       }
 
@@ -74,7 +75,6 @@ export function useChat(threadId: string | null) {
         role: "assistant",
         content: data.response,
       };
-
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
       setError(toUserFriendlyMessage(err));

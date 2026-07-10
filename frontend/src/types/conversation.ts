@@ -14,5 +14,5 @@ interface RawMessage {
 
 export interface ConversationMessagesResponse {
   threadId: string;
-  message: RawMessage[];
+  messages: RawMessage[];
 }
