@@ -16,6 +16,7 @@ function App() {
     createConversation,
     touchConversation,
     refreshConversations,
+    renameConversation,
   } = useConversations();
 
   const { messages, sendMessage, loading, error } = useChat(selectedThreadId);
@@ -66,6 +67,12 @@ function App() {
         <ChatHeader
           title={currentTitle}
           onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+          onRename={(newTitle) => {
+            if (selectedThreadId) {
+              renameConversation(selectedThreadId, newTitle);
+            }
+          }}
+          canRename={!!selectedThreadId}
         />
         <ChatWindow messages={messages} loading={loading} />
         {error && <ErrorBanner message={error} />}
