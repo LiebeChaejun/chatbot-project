@@ -5,13 +5,9 @@ from db.conversations import (
   list_conversations,
   update_conversation_title
 )
+from dependencies import get_app_state
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
-
-def get_app_state():
-  # main.py의 app_state를 참조하기 위한 지연 import (순환 참조 방지)
-  from main import app_state
-  return app_state
 
 @router.post("")
 async def create_new_conversation():

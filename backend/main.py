@@ -12,12 +12,10 @@ from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from graph.agent import workflow
 from db.conversations import init_conversations_db, touch_conversation, create_conversation, update_conversation_title
 from routers.conversations import router as conversations_router
+from dependencies import app_state
 
 CHECKPOINT_DB_PATH = os.path.join(BASE_DIR, "history_single_agent.sqlite")
 CONVERSATIONS_DB_PATH = os.path.join(BASE_DIR, "conversations.sqlite")
-
-app_state = {}
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
