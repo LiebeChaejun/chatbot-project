@@ -1,5 +1,6 @@
 export const STORAGE_KEYS = {
   LAST_THREAD_ID: "chat_last_thread_id",
+  OWNER_ID: "chat_owner_id",
 } as const;
 
 export const API_CONFIG = {

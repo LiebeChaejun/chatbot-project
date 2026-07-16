@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { API_CONFIG } from "../constants";
 import { toUserFriendlyMessage } from "../utils/errorMessage";
 import { toMessages } from "../utils/conversation";
+import { getOrCreateOwnerId } from "../utils/owner";
 import type { Message } from "../types/chat";
 import type { ChatApiResponse } from "../types/api";
 import type { ConversationMessagesResponse } from "../types/conversation";
@@ -16,10 +17,12 @@ export function useChat(threadId: string | null) {
       setMessages([]);
       return;
     }
+
     const loadPastMessages = async () => {
       try {
         const res = await fetch(
-          `${API_CONFIG.BASE_URL}/conversations/${threadId}/messages`
+          `${API_CONFIG.BASE_URL}/conversations/${threadId}/messages`,
+          { headers: { "X-Owner-Id": getOrCreateOwnerId() } }
         );
         if (!res.ok) {
           setMessages([]);
@@ -57,8 +60,11 @@ export function useChat(threadId: string | null) {
     try {
       const res = await fetch(`${API_CONFIG.BASE_URL}/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: content, thread_id: targetThreadId }), // ⬅️ 여기도 변경
+        headers: {
+          "Content-Type": "application/json",
+          "X-Owner-Id": getOrCreateOwnerId(),
+        },
+        body: JSON.stringify({ message: content, thread_id: targetThreadId }),
         signal: controller.signal,
       });
 
