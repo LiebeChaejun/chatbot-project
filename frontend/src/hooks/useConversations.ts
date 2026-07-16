@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { API_CONFIG } from "../constants";
 import { toConversations, toConversation } from "../utils/conversation";
+import { toUserFriendlyMessage } from "../utils/errorMessage";
 import type { Conversation } from "../types/conversation";
 
 export function useConversations() {
@@ -18,9 +19,7 @@ export function useConversations() {
       const data = await res.json();
       setConversations(toConversations(data.conversations));
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "알 수 없는 오류가 발생했어요."
-      );
+      setError(toUserFriendlyMessage(err));
     } finally {
       setLoading(false);
     }
@@ -30,33 +29,45 @@ export function useConversations() {
     fetchConversations();
   }, []);
 
-  const createConversation = async (): Promise<Conversation> => {
-    const res = await fetch(`${API_CONFIG.BASE_URL}/conversations`, {
-      method: "POST",
-    });
-    if (!res.ok) throw new Error("새 대화를 생성하지 못했어요.");
+  const createConversation = async (): Promise<Conversation | null> => {
+    setError(null);
+    try {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/conversations`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error("새 대화를 생성하지 못했어요.");
 
-    const data = await res.json();
-    const conversation = toConversation(data);
+      const data = await res.json();
+      const conversation = toConversation(data);
 
-    setConversations((prev) => [conversation, ...prev]);
-    return conversation;
+      setConversations((prev) => [conversation, ...prev]);
+      return conversation;
+    } catch (err) {
+      setError(toUserFriendlyMessage(err));
+      return null;
+    }
   };
 
   const renameConversation = async (threadId: string, title: string) => {
-    const res = await fetch(
-      `${API_CONFIG.BASE_URL}/conversations/${threadId}`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
-      }
-    );
-    if (!res.ok) throw new Error("제목을 수정하지 못했어요.");
+    setError(null);
 
-    setConversations((prev) =>
-      prev.map((c) => (c.threadId === threadId ? { ...c, title } : c))
-    );
+    try {
+      const res = await fetch(
+        `${API_CONFIG.BASE_URL}/conversations/${threadId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title }),
+        }
+      );
+      if (!res.ok) throw new Error("제목을 수정하지 못했어요.");
+
+      setConversations((prev) =>
+        prev.map((c) => (c.threadId === threadId ? { ...c, title } : c))
+      );
+    } catch (err) {
+      setError(toUserFriendlyMessage(err));
+    }
   };
 
   const touchConversation = (threadId: string) => {
@@ -68,6 +79,8 @@ export function useConversations() {
     });
   };
 
+  const clearError = () => setError(null);
+
   return {
     conversations,
     loading,
@@ -76,5 +89,6 @@ export function useConversations() {
     renameConversation,
     touchConversation,
     refreshConversations: fetchConversations,
+    clearError,
   };
 }

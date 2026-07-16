@@ -17,9 +17,19 @@ function App() {
     touchConversation,
     refreshConversations,
     renameConversation,
+    error: conversationsError,
+    clearError: clearConversationsError,
   } = useConversations();
 
-  const { messages, sendMessage, loading, error } = useChat(selectedThreadId);
+  const {
+    messages,
+    sendMessage,
+    loading,
+    error: chatError,
+    clearError: clearChatError,
+  } = useChat(selectedThreadId);
+
+  const displayError = chatError ?? conversationsError;
 
   const currentTitle =
     conversations.find((c) => c.threadId === selectedThreadId)?.title ??
@@ -31,6 +41,7 @@ function App() {
 
     if (!threadId) {
       const conversation = await createConversation();
+      if (!conversation) return;
       threadId = conversation.threadId;
       setSelectedThreadId(threadId);
     }
@@ -75,7 +86,15 @@ function App() {
           canRename={!!selectedThreadId}
         />
         <ChatWindow messages={messages} loading={loading} />
-        {error && <ErrorBanner message={error} />}
+        {displayError && (
+          <ErrorBanner
+            message={displayError}
+            onDismiss={() => {
+              clearChatError();
+              clearConversationsError();
+            }}
+          />
+        )}
         <ChatInput onSend={handleSend} disabled={loading} />
       </div>
     </div>

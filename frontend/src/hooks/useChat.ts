@@ -84,5 +84,7 @@ export function useChat(threadId: string | null) {
     }
   };
 
-  return { messages, sendMessage, loading, error };
+  const clearError = () => setError(null);
+
+  return { messages, sendMessage, loading, error, clearError };
 }
