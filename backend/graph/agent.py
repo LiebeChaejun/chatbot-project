@@ -5,7 +5,7 @@ from langchain_core.messages import BaseMessage, AIMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
@@ -24,9 +24,8 @@ optimal_chunk_size = get_optimal_chunk_size(file_path)
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=optimal_chunk_size, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)
 
-embeddings = HuggingFaceEmbeddings(
-    model_name="BAAI/bge-m3",
-    encode_kwargs={"normalize_embeddings": True}
+embeddings = OpenAIEmbeddings(
+    model="text-embedding-3-small",
 )
 vectorstore = FAISS.from_documents(docs, embeddings)
 retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
