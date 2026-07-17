@@ -84,6 +84,8 @@ export function useConversations() {
     });
   };
 
+  const clearError = () => setError(null);
+
   return {
     conversations,
     loading,
@@ -92,5 +94,6 @@ export function useConversations() {
     renameConversation,
     touchConversation,
     refreshConversations: fetchConversations,
+    clearError,
   };
 }
