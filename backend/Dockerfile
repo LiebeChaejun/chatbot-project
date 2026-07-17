@@ -13,6 +13,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN python -c "from langchain_huggingface import HuggingFaceEmbeddings; \
     HuggingFaceEmbeddings(model_name='BAAI/bge-m3', encode_kwargs={'normalize_embeddings': True})"
 
+ENV HF_HUB_OFFLINE=1
+ENV TRANSFORMERS_OFFLINE=1
+
 COPY . .
 
 EXPOSE 8000
