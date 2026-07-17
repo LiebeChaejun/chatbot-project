@@ -10,3 +10,4 @@ faiss-cpu
 python-dotenv
 aiosqlite
 pydantic
+sentence-transformers
