@@ -1,6 +1,10 @@
 # RAG 챗봇 프로젝트
 
-LangGraph 기반 멀티 에이전트 RAG(Retrieval-Augmented Generation) 챗봇에, 멀티 세션 대화 관리 기능을 더한 풀스택 프로젝트입니다. 사내 매뉴얼 문서를 검색해 답변하는 온라인 교육 플랫폼("코드크래프터스 아카데미") 고객센터 챗봇을 가정하고 만들었습니다.
+온라인 교육 플랫폼의 고객센터에서는 사용자가 이전 대화를 이어서 질문하거나, 여러 상담을 동시에 진행하는 상황이 자주 발생합니다.
+
+이 프로젝트는 이러한 실제 서비스 환경을 가정하여 **대화 맥락을 이해하는 RAG 챗봇**과 **ChatGPT와 같은 멀티 세션 관리 기능**을 구현한 풀스택 프로젝트입니다.
+
+단순히 LLM을 연결하는 데 그치지 않고, 사용자 경험과 운영 환경까지 고려하여 서비스를 설계했습니다.
 
 **🔗 배포 링크: https://chatbot-project-gamma-nine.vercel.app**
 **🔗 GitHub: https://github.com/LiebeChaejun/chatbot-project**
